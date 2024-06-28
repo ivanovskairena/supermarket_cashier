@@ -219,6 +219,12 @@ defmodule SupermarketCashier.CheckoutTest do
 
       assert log =~ "Error applying pricing rule: Unexpected error"
     end
+
+    test "handles error in pricing rules for checkout" do
+      faulty_rule = fn _, _ -> raise "Pricing rule error" end
+      {:ok, pid} = Checkout.start_link([faulty_rule])
+      assert Checkout.checkout(pid) == "Error occurred in pricing rules"
+    end
   end
 
   describe "Scanning edge cases" do

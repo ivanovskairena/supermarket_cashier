@@ -137,4 +137,14 @@ defmodule SupermarketCashier.CheckoutSupervisorTest do
       assert result == {:error, :invalid_pricing_rules}
     end
   end
+
+  test "returns {:error, reason} when DynamicSupervisor.start_child/2 raises an error" do
+    invalid_spec = %{id: :invalid_child, start: {NonExistentModule, :start_link, []}}
+
+    pricing_rules = [invalid_spec]
+
+    result = CheckoutSupervisor.checkout!(pricing_rules)
+
+    assert {:error, _reason} = result
+  end
 end

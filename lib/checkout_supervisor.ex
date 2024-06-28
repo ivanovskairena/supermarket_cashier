@@ -10,12 +10,7 @@ defmodule SupermarketCashier.CheckoutSupervisor do
 
   def checkout!(pricing_rules) when is_list(pricing_rules) do
     if Enum.all?(pricing_rules, &valid_pricing_rule?/1) do
-      try do
-        DynamicSupervisor.start_child(__MODULE__, {SupermarketCashier.Checkout, pricing_rules})
-      catch
-        :error, reason ->
-          {:error, reason}
-      end
+      DynamicSupervisor.start_child(__MODULE__, {SupermarketCashier.Checkout, pricing_rules})
     else
       {:error, :invalid_pricing_rules}
     end
