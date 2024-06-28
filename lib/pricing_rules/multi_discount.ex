@@ -9,12 +9,16 @@ defmodule SupermarketCashier.PricingRules.MultiDiscount do
       iex> MultiDiscount.apply_rule(3, 11.23)
       22.47
   """
-  def apply_rule(count, _price) when count >= 3 do
-    # 2/3 of 11.23 is approximately 7.49
-    7.49 * count
-  end
 
-  def apply_rule(count, price) do
-    price * count
+  @spec apply_rule(list(), float()) :: float()
+  def apply_rule(items, total) do
+    multiple_items = Enum.filter(items, &(&1.code == "CF1"))
+
+    if length(multiple_items) >= 3 do
+      total_discount = Enum.count(multiple_items) * (Enum.at(multiple_items, 0).price / 3)
+      Float.round(total - total_discount, 2)
+    else
+      Float.round(total, 2)
+    end
   end
 end
