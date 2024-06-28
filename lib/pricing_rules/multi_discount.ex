@@ -1,14 +1,14 @@
 defmodule SupermarketCashier.PricingRules.MultiDiscount do
-  @behaviour SupermarketCashier.PricingRule
-
-  @doc """
-  Applies the multi-discount rule to the given count of items.
+  @moduledoc """
+  PricingRule for applying the multi-discount rule to the given count of items.
+  If you buy 3 or more coffees, the price of all coffees should drop to two thirds of the original price.
 
   ## Examples
 
       iex> MultiDiscount.apply_rule(3, 11.23)
       22.47
   """
+  @behaviour SupermarketCashier.PricingRule
 
   @spec apply_rule(list(), float()) :: float()
   def apply_rule(items, total) do

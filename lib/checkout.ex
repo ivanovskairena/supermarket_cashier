@@ -1,20 +1,82 @@
 defmodule SupermarketCashier.Checkout do
+  @moduledoc """
+  A `GenServer` responsible for handling the checkout process.
+
+  This module provides functions to start a new checkout process, scan items,
+  calculate the total price, and complete the checkout. It applies various
+  pricing rules to the items in the cart and formats the total price with a currency symbol.
+
+  ## Example
+
+      iex> {:ok, pid} = SupermarketCashier.Checkout.new(pricing_rules)
+      iex> SupermarketCashier.Checkout.scan(pid, "GR1")
+      :ok
+      iex> SupermarketCashier.Checkout.total(pid)
+      "£3.11"
+      iex> SupermarketCashier.Checkout.checkout(pid)
+      "£3.11"
+  """
+
   use GenServer, restart: :transient
   require Logger
   alias SupermarketCashier.{Order, Product}
 
-  @doc "Starts a new checkout process"
+  @doc """
+  Starts a new checkout process.
+
+  ## Parameters
+
+    * `pricing_rules` - A list of pricing rules to be applied during the checkout.
+
+  ## Examples
+
+      iex> {:ok, pid} = SupermarketCashier.Checkout.start_link(pricing_rules)
+  """
   def start_link(pricing_rules) do
     GenServer.start_link(__MODULE__, %Order{pricing_rules: pricing_rules})
   end
 
+  @doc """
+  Creates a new checkout process.
+
+  ## Parameters
+
+    * `pricing_rules` - A list of pricing rules to be applied during the checkout.
+
+  ## Examples
+
+      iex> {:ok, pid} = SupermarketCashier.Checkout.new(pricing_rules)
+  """
   def new(pricing_rules), do: start_link(pricing_rules)
 
-  @doc "Returns the order behind this process"
+  @doc """
+  Returns the current order state of the checkout process.
+
+  ## Parameters
+
+    * `pid` - The process identifier of the checkout process.
+
+  ## Examples
+
+      iex> order = SupermarketCashier.Checkout.order(pid)
+      %SupermarketCashier.Order{...}
+  """
   @spec order(pid()) :: Order.t()
   def order(pid), do: GenServer.call(pid, :order)
 
-  @doc "Scans the item in the cart, given product code"
+  @doc """
+  Scans an item and adds it to the cart.
+
+  ## Parameters
+
+    * `pid` - The process identifier of the checkout process.
+    * `product_code` - The code of the product to scan.
+
+  ## Examples
+
+      iex> SupermarketCashier.Checkout.scan(pid, "GR1")
+      :ok
+  """
   @spec scan(pid(), String.t()) :: :ok | {:error, String.t()}
   def scan(pid, product_code) do
     case Product.get_product(product_code) do
@@ -28,11 +90,33 @@ defmodule SupermarketCashier.Checkout do
     end
   end
 
-  @doc "Returns total, formatted with currency symbol, does not kill itself"
+  @doc """
+  Returns the total price formatted with the currency symbol.
+
+  ## Parameters
+
+    * `pid` - The process identifier of the checkout process.
+
+  ## Examples
+
+      iex> SupermarketCashier.Checkout.total(pid)
+      "£3.11"
+  """
   @spec total(pid()) :: String.t()
   def total(pid), do: GenServer.call(pid, :total)
 
-  @doc "Returns total, formatted with currency symbol, kills itself"
+  @doc """
+  Returns the total price formatted with the currency symbol and terminates the process.
+
+  ## Parameters
+
+    * `pid` - The process identifier of the checkout process.
+
+  ## Examples
+
+      iex> SupermarketCashier.Checkout.checkout(pid)
+      "£3.11"
+  """
   @spec checkout(pid()) :: String.t()
   def checkout(pid), do: GenServer.call(pid, :checkout)
 
@@ -99,6 +183,18 @@ defmodule SupermarketCashier.Checkout do
     end)
   end
 
+  @doc """
+  Formats the total price with the currency symbol.
+
+  ## Parameters
+
+    * `total` - The total amount to be formatted.
+
+  ## Examples
+
+      iex> SupermarketCashier.Checkout.format_price(3.11)
+      "£3.11"
+  """
   def format_price(total) do
     rounded_total = Float.round(total, 2)
 

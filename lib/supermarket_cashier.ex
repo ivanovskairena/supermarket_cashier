@@ -9,9 +9,9 @@ defmodule SupermarketCashier do
   ## Examples
 
       iex> cart = []
-      iex> product = %Product{code: "GR1", name: "Green Tea", price: 3.11}
+      iex> product = %SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: 3.11}
       iex> SupermarketCashier.add_product(cart, product)
-      [%Product{code: "GR1", name: "Green Tea", price: 3.11}]
+      [%SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: 3.11}]
   """
   def add_product(cart, product) do
     [product | cart]
@@ -23,8 +23,8 @@ defmodule SupermarketCashier do
   ## Examples
 
       iex> cart = [
-      ...>   %Product{code: "GR1", name: "Green Tea", price: 3.11},
-      ...>   %Product{code: "SR1", name: "Strawberries", price: 5.00}
+      ...>   %SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: 3.11},
+      ...>   %SupermarketCashier.Product{code: "SR1", name: "Strawberries", price: 5.00}
       ...> ]
       iex> SupermarketCashier.total_price(cart)
       8.11

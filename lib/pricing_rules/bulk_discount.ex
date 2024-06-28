@@ -1,14 +1,14 @@
 defmodule SupermarketCashier.PricingRules.BulkDiscount do
-  @behaviour SupermarketCashier.PricingRule
-
-  @doc """
-  Applies the bulk discount rule to the given count of items.
+  @moduledoc """
+  Pricing for applying the bulk discount rule to the given count of items.
+  If you buy 3 or more strawberries, the price should drop to £4.50 per strawberry.
 
   ## Examples
 
       iex> BulkDiscount.apply_rule(3, 5.00)
       13.50
   """
+  @behaviour SupermarketCashier.PricingRule
 
   @spec apply_rule(list(), float()) :: float()
   def apply_rule(items, total) do

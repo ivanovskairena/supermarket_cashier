@@ -1,5 +1,7 @@
 defmodule SupermarketCashier.Application do
-  @moduledoc false
+  @moduledoc """
+  The main application module for SupermarketCashier.
+  """
   use Application
 
   def start(_type, _args) do

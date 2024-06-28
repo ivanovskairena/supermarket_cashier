@@ -1,8 +1,7 @@
 defmodule SupermarketCashier.PricingRules.BuyOneGetOneFree do
-  @behaviour SupermarketCashier.PricingRule
-
-  @doc """
-  Applies the buy-one-get-one-free rule to the given count of items.
+  @moduledoc """
+  PricingRule for applying the buy-one-get-one-free rule to the given count of items.
+  If you buy one you get one free offers of green tea
 
   ## Examples
 
@@ -12,6 +11,7 @@ defmodule SupermarketCashier.PricingRules.BuyOneGetOneFree do
       iex> BuyOneGetOneFree.apply_rule(3, 3.11)
       6.22
   """
+  @behaviour SupermarketCashier.PricingRule
 
   @spec apply_rule(list(), float()) :: float()
   def apply_rule(items, total) do
