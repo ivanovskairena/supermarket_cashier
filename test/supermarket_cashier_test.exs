@@ -1,6 +1,8 @@
 defmodule SupermarketCashierTest do
   use ExUnit.Case
 
+  alias SupermarketCashier.Product
+
   describe "SupermarketCashier.add_product/2" do
     test "adds a product to the cart" do
       cart = []
