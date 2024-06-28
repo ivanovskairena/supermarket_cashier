@@ -1,18 +1,4 @@
 defmodule SupermarketCashier do
-  @moduledoc """
-  Documentation for SupermarketCashier.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> SupermarketCashier.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  def add_product(cart, _product), do: cart
+  def total(_cart), do: 0.0
 end
