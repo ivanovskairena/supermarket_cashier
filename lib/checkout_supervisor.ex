@@ -1,19 +1,37 @@
 defmodule SupermarketCashier.CheckoutSupervisor do
-  use Supervisor
+  @moduledoc """
+  DynamicSupervisor to supervise checkouts.
+  """
+  use DynamicSupervisor
 
-  def start_link(_) do
-    Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
+  def start_link(opts \\ []) do
+    DynamicSupervisor.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def init(:ok) do
-    children = [
-      {DynamicSupervisor, strategy: :one_for_one, name: SupermarketCashier.CheckoutSupervisor}
-    ]
-
-    Supervisor.init(children, strategy: :one_for_one)
+  def checkout!(pricing_rules) when is_list(pricing_rules) do
+    if Enum.all?(pricing_rules, &valid_pricing_rule?/1) do
+      try do
+        DynamicSupervisor.start_child(__MODULE__, {SupermarketCashier.Checkout, pricing_rules})
+      catch
+        :error, reason ->
+          {:error, reason}
+      end
+    else
+      {:error, :invalid_pricing_rules}
+    end
   end
 
-  def start_checkout(supervisor) do
-    DynamicSupervisor.start_child(supervisor, {SupermarketCashier.Checkout, []})
+  def checkout!(_invalid) do
+    {:error, :invalid_pricing_rules}
+  end
+
+  def valid_pricing_rule?({module, function}) when is_atom(module) and is_atom(function),
+    do: true
+
+  def valid_pricing_rule?(_), do: false
+
+  @impl true
+  def init(_opts) do
+    DynamicSupervisor.init(strategy: :one_for_one)
   end
 end
