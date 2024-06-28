@@ -8,6 +8,13 @@ defmodule SupermarketCashier.PricingRules.BuyOneGetOneFree do
 
       iex> BuyOneGetOneFree.apply_rule(2, 3.11)
       3.11
+
+      iex> BuyOneGetOneFree.apply_rule(3, 3.11)
+      6.22
   """
-  def apply_rule(_count, _price), do: 0.0
+  def apply_rule(count, price) do
+    free_items = div(count, 2)
+    total_price_items = count - free_items
+    total_price_items * price
+  end
 end
