@@ -1,4 +1,4 @@
-efmodule SupermarketCashier.PricingRules.BulkDiscount do
+defmodule SupermarketCashier.PricingRules.BulkDiscount do
   @behaviour SupermarketCashier.PricingRule
 
   @doc """
@@ -9,5 +9,11 @@ efmodule SupermarketCashier.PricingRules.BulkDiscount do
       iex> BulkDiscount.apply_rule(3, 5.00)
       13.50
   """
-  def apply_rule(_count, _price), do: 0.0
+  def apply_rule(count, _price) when count >= 3 do
+    4.50 * count
+  end
+
+  def apply_rule(count, price) do
+    price * count
+  end
 end
