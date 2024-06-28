@@ -12,11 +12,11 @@ This project implements a simple cashier function for a small supermarket chain.
 ## Product Details
 The following test products are registered in the system:
 
-Product Code	Name	        Price
-----------------------------------
-GR1	          Green tea	    £3.11
-SR1	          Strawberries	£5.00
-CF1	          Coffee	      £11.23
+| Product Code | Name          | Price |
+|--------------|---------------|-------|
+| GR1          | Green tea     | £3.11 |
+| SR1          | Strawberries  | £5.00 |
+| CF1          | Coffee        | £11.23 |
 
 ## Special Conditions
 1. Green Tea (GR1): Buy-one-get-one-free offer.
