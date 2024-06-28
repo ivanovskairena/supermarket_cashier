@@ -5,7 +5,7 @@ defmodule SupermarketCashier.CheckoutSupervisor do
   use DynamicSupervisor
 
   def start_link(opts \\ []) do
-    DynamicSupervisor.start_link(__MODULE__, opts, name: __MODULE__)
+    DynamicSupervisor.start_link(__MODULE__, opts, name: Keyword.get(opts, :name, __MODULE__))
   end
 
   def checkout!(pricing_rules) when is_list(pricing_rules) do
