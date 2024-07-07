@@ -3,6 +3,7 @@ defmodule SupermarketCashier.CheckoutTest do
   import ExUnit.CaptureLog
 
   alias SupermarketCashier.{Checkout, PricingRules, Product}
+  import Decimal, only: [from_float: 1, new: 1, sub: 2]
 
   setup do
     pricing_rules = [
@@ -108,7 +109,11 @@ defmodule SupermarketCashier.CheckoutTest do
     end
 
     test "handle_cast for valid product scan", %{pid: pid} do
-      GenServer.cast(pid, {:scan, %Product{code: "GR1", name: "Green tea", price: 3.11}})
+      GenServer.cast(
+        pid,
+        {:scan, %Product{code: "GR1", name: "Green tea", price: new("3.11")}}
+      )
+
       total = Checkout.total(pid)
       assert total == "£3.11"
     end
@@ -155,11 +160,32 @@ defmodule SupermarketCashier.CheckoutTest do
     end
   end
 
+  describe "normalize_price/1" do
+    test "converts float to Decimal" do
+      assert Checkout.normalize_price(1.23) == Decimal.from_float(1.23)
+    end
+
+    test "converts integer to Decimal" do
+      assert Checkout.normalize_price(5) == Decimal.new(5)
+    end
+
+    test "returns Decimal as is" do
+      decimal_price = Decimal.new("3.11")
+      assert Checkout.normalize_price(decimal_price) == decimal_price
+    end
+
+    test "raises ArgumentError for invalid price format" do
+      assert_raise ArgumentError, fn ->
+        Checkout.normalize_price("invalid_price")
+      end
+    end
+  end
+
   describe "Price formatting" do
     test "formats price correctly" do
-      assert Checkout.format_price(3.115) == "£3.12"
-      assert Checkout.format_price(3.114) == "£3.11"
-      assert Checkout.format_price(3.1) == "£3.10"
+      assert Checkout.format_price(from_float(3.115)) == "£3.12"
+      assert Checkout.format_price(from_float(3.114)) == "£3.11"
+      assert Checkout.format_price(from_float(3.1)) == "£3.10"
     end
   end
 
@@ -255,7 +281,7 @@ defmodule SupermarketCashier.CheckoutTest do
   describe "apply_pricing_rules function" do
     test "handles valid inline function format" do
       pricing_rules = [
-        fn _items, acc -> acc - 1.0 end
+        fn _items, acc -> sub(acc, new("1.0")) end
       ]
 
       {:ok, pid} = Checkout.new(pricing_rules)

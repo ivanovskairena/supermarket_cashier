@@ -166,3 +166,22 @@ items = ["GR1", "SR1", "GR1", "GR1", "CF1"]
 total = BasketScan.test_basket(pricing_rules, items)
 IO.puts("Total: #{total}")
 ```
+# Pricing Calculation and IEEE 754 Standard
+In this project, as improvement I'm using the Decimal library for precise arithmetic operations, following the IEEE 754 standard for floating-point arithmetic. 
+This ensures consistent and accurate rounding behavior.
+
+## Rounding Behavior
+I use the :half_even rounding mode, also known as "bankers' rounding." This mode rounds to the nearest even number when the number is exactly halfway between two possible rounded values. This method helps to reduce rounding bias in financial calculations.
+
+### Example:
+
+``` elixir
+total = from_float(19.345)
+formatted_price = format_price(total)
+# Result: "£19.34"
+```
+
+In the above example, 19.345 is rounded to 19.34 according to the IEEE 754 standard's :half_even rounding mode, in standard rounding it will be rounded to  19.35.
+
+By adhering to the IEEE 754 standard, we ensure that our pricing calculations are accurate and consistent, providing reliable results for the supermarket's checkout process.
+

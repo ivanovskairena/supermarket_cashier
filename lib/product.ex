@@ -4,13 +4,12 @@ defmodule SupermarketCashier.Product do
 
   This module includes functions to get all products and to find a product by its code.
   """
-
-  defstruct code: "", name: "", price: 0.0
+  defstruct code: "", name: "", price: Decimal.new("0.0")
 
   @type t() :: %__MODULE__{
           code: String.t(),
           name: String.t(),
-          price: float()
+          price: Decimal.t()
         }
 
   @doc """
@@ -19,7 +18,7 @@ defmodule SupermarketCashier.Product do
   ## Examples
 
       iex> SupermarketCashier.Product.all()
-      [%SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: 3.11}, %SupermarketCashier.Product{code: "SR1", name: "Strawberries", price: 5.00}, %SupermarketCashier.Product{code: "CF1", name: "Coffee", price: 11.23}]
+      [%SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: Decimal.new("3.11")}, %SupermarketCashier.Product{code: "SR1", name: "Strawberries", price: Decimal.new("5.00")}, %SupermarketCashier.Product{code: "CF1", name: "Coffee", price: Decimal.new("11.23")}]
   """
   @spec all() :: [t()]
   def all(), do: products()
@@ -34,7 +33,7 @@ defmodule SupermarketCashier.Product do
   ## Examples
 
       iex> SupermarketCashier.Product.get_product("GR1")
-      %SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: 3.11}
+      %SupermarketCashier.Product{code: "GR1", name: "Green Tea", price: Decimal.new("3.11")}
 
       iex> SupermarketCashier.Product.get_product("INVALID")
       nil
@@ -44,9 +43,9 @@ defmodule SupermarketCashier.Product do
 
   defp products do
     [
-      %__MODULE__{code: "GR1", name: "Green Tea", price: 3.11},
-      %__MODULE__{code: "SR1", name: "Strawberries", price: 5.00},
-      %__MODULE__{code: "CF1", name: "Coffee", price: 11.23}
+      %__MODULE__{code: "GR1", name: "Green Tea", price: Decimal.new("3.11")},
+      %__MODULE__{code: "SR1", name: "Strawberries", price: Decimal.new("5.00")},
+      %__MODULE__{code: "CF1", name: "Coffee", price: Decimal.new("11.23")}
     ]
   end
 end

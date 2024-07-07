@@ -6,13 +6,14 @@ defmodule SupermarketCashier.Order do
   """
 
   alias SupermarketCashier.Product
+  import Decimal, only: [new: 1]
 
-  defstruct items: [], pricing_rules: [], total: 0.0
+  defstruct items: [], pricing_rules: [], total: new(0)
 
   @type t() :: %__MODULE__{
           items: [Product.t()],
           pricing_rules: [{module(), atom()}],
-          total: float()
+          total: Decimal.t()
         }
 
   @doc """
@@ -21,9 +22,9 @@ defmodule SupermarketCashier.Order do
   ## Examples
 
       iex> SupermarketCashier.Order.new([{SupermarketCashier.PricingRules.BuyOneGetOneFree, :apply_rule}])
-      %SupermarketCashier.Order{pricing_rules: [{SupermarketCashier.PricingRules.BuyOneGetOneFree, :apply_rule}], items: [], total: 0.0}
+      %SupermarketCashier.Order{pricing_rules: [{SupermarketCashier.PricingRules.BuyOneGetOneFree, :apply_rule}], items: [], total: Decimal.new(0)}
   """
   def new(pricing_rules) do
-    %__MODULE__{pricing_rules: pricing_rules}
+    %__MODULE__{pricing_rules: pricing_rules, total: Decimal.new(0)}
   end
 end

@@ -5,20 +5,25 @@ defmodule SupermarketCashier.PricingRules.BulkDiscount do
 
   ## Examples
 
-      iex> BulkDiscount.apply_rule(3, 5.00)
-      13.50
+      iex> BulkDiscount.apply_rule(3, Decimal.new("5.00"))
+      Decimal.new("13.50")
   """
+  import Decimal, only: [new: 1, sub: 2, mult: 2]
+
   @behaviour SupermarketCashier.PricingRule
 
-  @spec apply_rule(list(), float()) :: float()
+  @spec apply_rule(list(), Decimal.t()) :: Decimal.t()
   def apply_rule(items, total) do
     strawberry_items = Enum.filter(items, &(&1.code == "SR1"))
 
     if length(strawberry_items) >= 3 do
-      discount = length(strawberry_items) * (Enum.at(strawberry_items, 0).price - 4.50)
-      Float.round(total - discount, 2)
+      original_price = Enum.at(strawberry_items, 0).price
+      discount_price = new("4.50")
+      discount_per_item = sub(original_price, discount_price)
+      discount = mult(discount_per_item, new(length(strawberry_items)))
+      sub(total, discount)
     else
-      Float.round(total, 2)
+      total
     end
   end
 end

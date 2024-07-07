@@ -5,7 +5,7 @@ defmodule SupermarketCashier.PricingRule do
   This module defines the behavior that all pricing rules must implement. It provides a default implementation for `apply_rule/2` and a no-op discount function.
   """
 
-  @callback apply_rule(items :: list(), total :: float()) :: float()
+  @callback apply_rule(items :: list(), total :: Decimal.t()) :: Decimal.t()
 
   @doc """
   Default implementation for applying a pricing rule.
